@@ -202,15 +202,19 @@ Contains:
 
 
         <div class="content">
+
+            <h3 align="center">{{clubInfo["clubName"]}}</h3>
+
             <div class="container-fluid">
                 <div class="row">
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">About Club</h4>
+                                <h4 class="title">About {{clubInfo["clubName"]}}</h4>
                             </div>
                             <div class="content">
+                                {{clubInfo["description"]}}
                             </div>
                         </div>
                     </div>
@@ -223,25 +227,7 @@ Contains:
                                 <h4 class="title">Regular Meeting Times</h4>
                             </div>
                             <div class="content">
-                                <?php
-                                    $conn = mysqli_connect("localhost", "root","", "company");
-                                    if ($conn -> connect_error){
-                                        die("Connection failed:". $conn -> connect_error);
-                                    }
-
-                                    $sql = "SELECT id from users";
-                                    $result = $conn -> query($sql);
-
-                                    if ($result -> num_rows > 0) {
-                                        while($row = $result -> fetch_assoc()){
-                                            echo $row["id"];
-                                        }
-                                    }
-                                    else {
-                                        echo "nananannanananana";
-                                    }
-                                    $conn -> close();
-                                ?>
+                                {{clubInfo["meetingTimes"]}}
                             </div>
                         </div>
                     </div>
@@ -249,23 +235,35 @@ Contains:
                     <div class="col-md-6">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Next Meeting</h4>
+                                <h4 class="title">Notifications</h4>
+                                <p class="category">Announcements & tasks</p>
                             </div>
                             <div class="content">
+                                {{clubInfo["notification"]}}
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="col-md-6">
+                        <div class="card ">
+                            <div class="header">
+                                <h4 class="title">Next Meeting</h4>
+                            </div>
+                            <div class="content">
+                                {{clubInfo["nextMeeting"]}}
+                            </div>
+                        </div>
+                    </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card ">
                             <div class="header">
-                                <h4 class="title">Notifications</h4>
-                                <p class="category">Announcements & tasks</p>
+                                <h4 class="title">Location</h4>
                             </div>
                             <div class="content">
-
+                                {{clubInfo["location"]}}
                             </div>
                         </div>
                     </div>
@@ -276,10 +274,21 @@ Contains:
                                 <h4 class="title">Upcoming Events</h4>
                             </div>
                             <div class="content">
-
+                                {{clubInfo["upcomingEvent"]}}
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="col-md-6">
+                        <div class="card ">
+                            <div class="header">
+                                <h4 class="title">Contact Information</h4>
+                            </div>
+                            <div class="content">
+                                {{clubInfo["contact"]}}
+                            </div>
+                        </div>
+                    </div>
 
                 <div class="row">
                     <div class="col-md-12">
@@ -289,63 +298,11 @@ Contains:
                                 <h4 class="title">Notes</h4>
                             </div>
                             <div class="content">
-
+                                {{clubInfo["notes"]}}
                             </div>
                         </div>
                     </div>
                 </div>
-
-            <!--My Clubs:-->
-            <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="header">
-                                <h4 class="title">My Clubs</h4>
-                            </div>
-                            <div class="content all-icons">
-                                <div class="row">
-                                  <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6">
-                                    <div class="font-icon-detail"><i class="pe-7s-back"></i>
-                                      <input type="text" value="pe-7s-back">
-                                    </div>
-
-                                  </div>
-                                  <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6">
-                                    <div class="font-icon-detail"><i class="pe-7s-attention"></i>
-                                      <input type="text" value="pe-7s-attention">
-                                    </div>
-
-                                  </div>
-                                  <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6">
-                                    <div class="font-icon-detail"><i class="pe-7s-anchor"></i>
-                                      <input type="text" value="pe-7s-anchor">
-                                    </div>
-
-                                  </div>
-                                  <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6">
-                                    <div class="font-icon-detail"><i class="pe-7s-albums"></i>
-                                      <input type="text" value="pe-7s-albums">
-                                    </div>
-
-                                  </div>
-                                  <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6">
-                                    <div class="font-icon-detail"><i class="pe-7s-alarm"></i>
-                                      <input type="text" value="pe-7s-alarm">
-                                    </div>
-
-                                  </div>
-                                  <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6">
-                                    <div class="font-icon-detail"><i class="pe-7s-airplay"></i>
-                                      <input type="text" value="pe-7s-airplay">
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
         <footer class="footer">

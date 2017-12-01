@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Club
+{% endblock %}
+
+{% block main %}
+    <div class="content">
+        <div class="container-fluid">
+        <div class="row">
+            <!--Private Events-->
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Private Events</h4>
+                                <p class="category">Events for members of your clubs</p>
+                            </div>
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    	<th>Event Name</th>
+                                    	<th>Location</th>
+                                    	<th>Description</th>
+                                    	<th>Add to Calendar</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for event in privateEvents %}
+                                        <tr>
+                                        	<td>{{event["date"]}}</td>
+                                        	<td>{{event["time"]}}</td>
+                                        	<td>{{event["eventName"]}}</td>
+                                        	<td>{{event["location"]}}</td>
+                                        	<td>{{event["description"]}}</td>
+                                        	<td>
+                                                <!--Button code -->
+                                                <div title="Add to Calendar" class="addeventatc">
+                                                Add to Calendar
+                                                <span class="start">{{event["date"]}}{{event["time"]}}</span>
+                                                <!--<span class="end">12/15/2017 10:00 AM</span>-->
+                                                <span class="timezone">America/Boston</span>
+                                                <span class="title">{{event["eventName"]}}</span>
+                                                <span class="description">{{event["description"]}}</span>
+                                                <span class="location">{{event["location"]}}</span>
+                                            </div>
+                                        	</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+        <!--Public Events-->
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Public Events</h4>
+                                <p class="category">Events for everyone!</p>
+                            </div>
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    	<th>Event Name</th>
+                                    	<th>Location</th>
+                                    	<th>Description</th>
+                                    	<th>Add to Calendar</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for event in publicEvents %}
+                                        <tr>
+                                        	<td>{{event["date"]}}</td>
+                                        	<td>{{event["time"]}}</td>
+                                        	<td>{{event["eventName"]}}</td>
+                                        	<td>{{event["location"]}}</td>
+                                        	<td>{{event["description"]}}</td>
+                                        	<td>
+                                                <!--Button code -->
+                                                <div title="Add to Calendar" class="addeventatc">
+                                                Add to Calendar
+                                                <span class="start">{{event["date"]}}{{event["time"]}}</span>
+                                                <!--<span class="end">12/15/2017 10:00 AM</span>-->
+                                                <span class="timezone">America/Boston</span>
+                                                <span class="title">{{event["eventName"]}}</span>
+                                                <span class="description">{{event["description"]}}</span>
+                                                <span class="location">{{event["location"]}}</span>
+                                            </div>
+                                        	</td>
+                                     </tr>
+
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Become Admin
+{% endblock %}
+
+{% block main %}
+<form action="/becomeadmin" method="post">
+        <label>
+
+        <div>Choose a club to become an admin of</div>
+
+        <!--Create dropdown menu with of users' stock symbols-->
+        <select input type="text" name="clubName" method="post">
+          {% for name in clubNames %}
+            <option value= {{ name["clubName"] }}>{{ name["clubName"] }}</option>
+          {% endfor %}
+        </select>
+
+      </label>
+
+        <p>
+            <!--Submit -->
+        <button class="btn btn-primary" type="submit">Become Admin</button>
+        </p>
+
+
+    </form>
+    </div>
+{% endblock %}

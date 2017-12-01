@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Club
+{% endblock %}
+
+{% block main %}
+<div class="content">
+            <h2>Create New Club</h2>
+
+ <form action="/createclub" method="post">
+
+        <!--Club Name-->
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="clubName" placeholder="Club Name" type="text"/>
+        </div>
+
+        <!--Description-->
+        <div class="form-group">
+            <input class="form-control" name="description" placeholder="Club Description" type="text"/>
+        </div>
+
+        <!--Create dropdown menu with of users' clubs-->
+        <div>Club Category</div>
+        <select input type="text" name="category" method="post">
+            <option value="Arts">Arts</option>
+            <option value="Athletic">Athletic</option>
+            <option value="Service">Service</option>
+            <option value="Media">Media</option>
+            <option value="Recreation">Recreation</option>
+            <option value="Cultural">Cultural</option>
+        </select>
+
+        <p></p>
+        <p></p>
+
+        <!--Meeting Times-->
+        <div class="form-group">
+            Meeting times
+            <input class="form-control" name="meetingTimes" placeholder="Meeting Times" type="datetime-local"/>
+        </div>
+
+        <!--Meeting Location-->
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="location" placeholder="Location" type="text"/>
+        </div>
+
+        <!--Contact Info-->
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="contact" placeholder="Contact Information" type="text"/>
+        </div>
+
+
+        <!--Submit -->
+        <button class="btn btn-primary" type="submit">Create Club</button>
+
+    </form>
+    </div>
+{% endblock %}
