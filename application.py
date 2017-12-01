@@ -12,7 +12,7 @@ from helpers import apology, login_required
 # Configure application
 app = Flask(__name__)
 
-db = SQL("sqlite:///database.db")
+db = SQL("postgres://lpgvjszmqqijjd:483762f3dcdd58ac65e424f6c3776b708fcd9b7c9eb9ecb56c2d2c293ddc52ef@ec2-184-73-206-155.compute-1.amazonaws.com:5432/ddo5j531r5v4n1")
 
 # Ensure responses aren't cached
 @app.after_request
