@@ -107,7 +107,7 @@ def userProfile():
 @app.route("/findclubs", methods=["GET", "POST"])
 def findClubs():
     if request.method == "POST":
-        return rendertemplate("findclubs.html")
+        return render_template("findclubs.html")
 
 
 
@@ -237,6 +237,9 @@ def addevent():
 def aboutus():
     return render_template("aboutus.html")
 
+@app.route("/notifications")
+def notifications():
+    return render_template("notifications.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
