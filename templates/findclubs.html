@@ -5,25 +5,127 @@
 {% endblock %}
 
 {% block main %}
+<form action="/findclubs" method="post">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="header">
+         <h4 class="title">Search for Clubs</h4></h4>
+      </div>
     <div class="content">
-        <h2>Search for Clubs</h2>
+      <div class="row">
+        <div class="col-md-12">
+        <!--Dropdown for club type-->
+        <div>
+        <select input type="text" name="selection" method="post">
+            <option></option>
+            <option value= academic>Academic</option>
+            <option value= arts>Arts</option>
+            <option value= athletic>Athletic</option>
+            <option value= cultural>Cultural</option>
+            <option value= media>Media</option>
+            <option value= service>Service</option>
+            <option value= recreationc>Recreation</option>
+            <option value= other>Other</option>
+        </select>
+        </div>
+        <p></p>
 
-        <label class="container">
-          <input type="checkbox" checked="checked">
-          <span class="checkmark"></span>
-        </label>
-        <label class="container">Two
-          <input type="checkbox">
-          <span class="checkmark"></span>
-        </label>
-        <label class="container">Three
-          <input type="checkbox">
-          <span class="checkmark"></span>
-        </label>
-        <label class="container">Four
-          <input type="checkbox">
-          <span class="checkmark"></span>
-        </label>
+        <!--Submit-->
+        <p></p>
+        <div>
+          <button type="submit" class="btn btn-info btn-fill pull-left">Search</button>
+          <div class="clearfix"></div>
+        </div>
 
+
+        <!--Results of clubs-->
+        <h4>Results</h4>
+            JOIN CLUB BUTTON NOT FUNCTIONAL <p></p>
+
+            {% if selection == "academic" %}
+              {% for club in academic %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if selection == "arts" %}
+              {% for club in arts %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if selection == "athletic" %}
+              {% for club in athletic %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value="{{club["clubName"]}}">Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if selection == "cultural" %}
+              {% for club in cultural %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if selection == "media" %}
+              {% for club in media %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if selection == "service" %}
+              {% for club in service %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if selection == "recreation" %}
+              {% for club in recreation %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+            {% if selection == "other" %}
+              {% for club in other %}
+              <p>
+                <!--Join club-->
+                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
+              </p>
+              {% endfor %}
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</form>
 {% endblock %}

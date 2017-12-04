@@ -12,6 +12,7 @@ from helpers import apology, login_required
 # Configure application
 app = Flask(__name__)
 
+# db = SQL("sqlite:///database.db")
 db = SQL("postgres://lpgvjszmqqijjd:483762f3dcdd58ac65e424f6c3776b708fcd9b7c9eb9ecb56c2d2c293ddc52ef@ec2-184-73-206-155.compute-1.amazonaws.com:5432/ddo5j531r5v4n1")
 
 # Ensure responses aren't cached
@@ -100,16 +101,72 @@ def club(id):
 
     return render_template("club.html", clubInfo = clubInfo[0])
 
-@app.route("/user")
+@app.route("/user", methods=["GET", "POST"])
 def userProfile():
-    return render_template("user.html")
+    if request.method == "POST":
+        email = request.form.get("email")
+        year = request.form.get("year")
+        firstName = request.form.get("firstName")
+        lastName = request.form.get("lastName")
+        aboutMe = request.form.get("aboutMe")
+        facebook = request.form.get("facebook")
+        twitter = request.form.get("twitter")
+
+        db.execute("UPDATE users SET email = :email, year = :year, firstName = :firstName, lastName = :lastName, aboutMe = :aboutMe, facebook = :facebook, twitter = :twitter WHERE id = :userID", userID=session["user_id"], email=email, year=year, firstName=firstName, lastName=lastName, aboutMe=aboutMe, facebook=facebook, twitter=twitter)
+
+        # get an updated list of information about the user
+        user = db.execute("SELECT * FROM users WHERE id=:userID", userID=session["user_id"])[0]
+        return render_template("user.html", user=user)
+
+    else:
+        # get a list of information about the user
+        user = db.execute("SELECT * FROM users WHERE id=:userID", userID=session["user_id"])[0]
+        return render_template("user.html", user=user)
+
+
+@app.route("/profile/<id>")
+def profile(id):
+
+    return render_template("club.html")
+
 
 @app.route("/findclubs", methods=["GET", "POST"])
 def findClubs():
     if request.method == "POST":
-        return render_template("findclubs.html")
 
+        # get the selection type from the dropdown menu
+        selection = request.form.get("selection")
 
+        # Join club route
+        if not selection:
+
+            clubName = request.form.get("club")
+            print(clubName)
+            # Determine the clubID from clubName " clubName +
+            clubID = db.execute("SELECT id FROM clubs WHERE clubName = :clubName", clubName=clubName)[0]["id"]
+
+            # If user is already in club
+            if db.execute("SELECT clubID FROM userClubs WHERE clubID=:clubID AND userID=:userID", clubID=clubID, userID=session["user_id"]):
+                return apology("You are already a member of "+clubName, 400)
+            else:
+
+                # Add club to user's information in database
+                db.execute("INSERT INTO userClubs (userID, clubID) VALUES(:userID, :clubID)",
+                    userID=session["user_id"], clubID=clubID)
+                return redirect("/dashboard")
+
+        # Category dropdown
+        else:
+            # make lists of clubs by type
+            academic = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Academic")
+            arts = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Arts")
+            athletic = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Athletic")
+            service = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Service")
+            media = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Media")
+            recreation = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Recreation")
+            cultural = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Cultural")
+
+            return render_template("findclubs.html", selection=selection, academic=academic, arts=arts, athletic=athletic, service=service, media=media, recreation=recreation, cultural=cultural)
 
     else:
         return render_template("findclubs.html")
@@ -144,7 +201,7 @@ def createclub():
             # return apology("Club already exists", 400)
 
         # Insert club into database
-        db.execute("INSERT INTO clubs (clubName, description, meetingTimes, location, contact) VALUES(:clubName, :description, :meetingTimes, :location, :contact)", clubName=clubName, description=description, meetingTimes=meetingTimes, location=location,contact=contact)
+        db.execute("INSERT INTO clubs (clubName, description, meetingTimes, location, contact, category) VALUES(:clubName, :description, :meetingTimes, :location, :contact, :category)", clubName=clubName, description=description, meetingTimes=meetingTimes, location=location, contact=contact, category=category)
 
 
         # Determine the clubID from clubName
@@ -239,7 +296,15 @@ def aboutus():
 
 @app.route("/notifications")
 def notifications():
-    return render_template("notifications.html")
+
+    # get a list of all notifications for the user's clubs
+    notifications = db.execute("SELECT notification, clubName FROM clubs INNER JOIN userClubs ON userClubs.clubID=clubs.id WHERE userID=:userID", userID=session["user_id"])
+
+    notificationsList = []
+    for notification in notifications:
+        notificationsList.append(notification)
+
+    return render_template("notifications.html", notificationsList = notificationsList)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
