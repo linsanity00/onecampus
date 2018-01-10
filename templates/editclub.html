@@ -5,18 +5,9 @@
 {% endblock %}
 
 {% block main %}
-    <h2>Edit Club Information</h2>
-
-    <form action="/editclub" method="post">
-
-        <!--Club Name-->
-        <!--<div class="form-group">-->
-        <!--    <input autocomplete="off" autofocus class="form-control" name="clubName" placeholder="Club Name" type="text"/>-->
-        <!--</div>-->
-
-        <label>
-
-      <label>
+<div class="content">
+    <h4>Edit Club Information</h4>
+        <form action="/editclub" method="post">
 
         <div>Choose club information to edit</div>
 
@@ -27,7 +18,8 @@
           {% endfor %}
         </select>
 
-      </label>
+        <p></p>
+        <p></p>
 
         <!--New Description-->
         <div class="form-group">
@@ -61,10 +53,9 @@
             <input class="form-control" name="notes" placeholder="Notes" type="text"/>
         </div>
 
-
-
         <!--Submit -->
-        <button class="btn btn-primary" type="submit">Edit Club</button>
+        <button type="submit" class="btn btn-info btn-fill pull-left">Edit Club</button>
+        <div class="clearfix"></div>
 
     </form>
     </div>

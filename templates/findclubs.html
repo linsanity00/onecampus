@@ -20,12 +20,10 @@
             <option></option>
             <option value= academic>Academic</option>
             <option value= arts>Arts</option>
-            <option value= athletic>Athletic</option>
             <option value= cultural>Cultural</option>
             <option value= media>Media</option>
             <option value= service>Service</option>
-            <option value= recreationc>Recreation</option>
-            <option value= other>Other</option>
+            <option value= recreation>Recreation</option>
         </select>
         </div>
         <p></p>
@@ -40,13 +38,13 @@
 
         <!--Results of clubs-->
         <h4>Results</h4>
-            JOIN CLUB BUTTON NOT FUNCTIONAL <p></p>
+             <p></p>
 
             {% if selection == "academic" %}
               {% for club in academic %}
               <p>
                 <!--Join club-->
-                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <button type="submit" class="btn btn-info btn-fill" name="club" value="{{club["clubName"]}}">Join Club</button>
                 <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
               </p>
               {% endfor %}
@@ -54,16 +52,6 @@
 
             {% if selection == "arts" %}
               {% for club in arts %}
-              <p>
-                <!--Join club-->
-                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
-                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
-              </p>
-              {% endfor %}
-            {% endif %}
-
-            {% if selection == "athletic" %}
-              {% for club in athletic %}
               <p>
                 <!--Join club-->
                 <button type="submit" class="btn btn-info btn-fill" name="club" value="{{club["clubName"]}}">Join Club</button>
@@ -76,7 +64,7 @@
               {% for club in cultural %}
               <p>
                 <!--Join club-->
-                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <button type="submit" class="btn btn-info btn-fill" name="club" value="{{club["clubName"]}}">Join Club</button>
                 <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
               </p>
               {% endfor %}
@@ -86,7 +74,7 @@
               {% for club in media %}
               <p>
                 <!--Join club-->
-                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <button type="submit" class="btn btn-info btn-fill" name="club" value="{{club["clubName"]}}">Join Club</button>
                 <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
               </p>
               {% endfor %}
@@ -96,7 +84,7 @@
               {% for club in service %}
               <p>
                 <!--Join club-->
-                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <button type="submit" class="btn btn-info btn-fill" name="club" value="{{club["clubName"]}}">Join Club</button>
                 <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
               </p>
               {% endfor %}
@@ -106,17 +94,7 @@
               {% for club in recreation %}
               <p>
                 <!--Join club-->
-                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
-                <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
-              </p>
-              {% endfor %}
-            {% endif %}
-
-            {% if selection == "other" %}
-              {% for club in other %}
-              <p>
-                <!--Join club-->
-                <button type="submit" class="btn btn-info btn-fill" name="club" value={{club["clubName"]}}>Join Club</button>
+                <button type="submit" class="btn btn-info btn-fill" name="club" value="{{club["clubName"]}}">Join Club</button>
                 <a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a>
               </p>
               {% endfor %}

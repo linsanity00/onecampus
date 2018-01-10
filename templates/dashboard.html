@@ -31,11 +31,10 @@
                         </div>
 
             <!--Upcoming Events-->
-                    <div class="col-md-12">
                         <div class="card">
                             <div class="header">
                                 <h4 class="title">My Events</h4>
-                                <p class="category">Events only for members of your clubs</p>
+                                <p class="category">Events I RSVP'd For</p>
                             </div>
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-hover table-striped">
@@ -48,7 +47,7 @@
                                     	<th>Add to Calendar</th>
                                     </thead>
                                     <tbody>
-                                        {% for event in privateEvents %}
+                                        {% for event in userEvents %}
                                         <tr>
                                         	<td>{{event["date"]}}</td>
                                         	<td>{{event["time"]}}</td>
@@ -74,9 +73,4 @@
                             </div>
                         </div>
                     </div>
-
 {% endblock %}
-
-
-
-

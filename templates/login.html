@@ -1,31 +1,123 @@
-<!doctype html>
 
-<html lang="en">
-<head>
-  <meta charset="utf-8">
+<!DOCTYPE html>
+<html>
+<style>
+form {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    width: 50%;
+    height: 50%;
+    float: center;
+    width: 300px;
+	margin: 0 auto;
+}
 
-  <title>Login</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 6px;
+}
 
-  <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-  <![endif]-->
-</head>
+button {
+    background-color: #2FAECE;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
 
-<body>
-    <form action="/login" method="post">
-            <div class="form-group">
-                <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>
-            </div>
-            <div class="form-group">
-                <input class="form-control" name="password" placeholder="Password" type="password"/>
-            </div>
-            <button class="btn btn-primary" type="submit">Log In</button>
-            <input type="button" onclick="location.href='register';" value="Register" />
-        </form>
+button:hover {
+    opacity: 0.8;
+}
+
+
+.imgcontainer {
+    text-align: center;
+    margin: 12px 0 12px 0;
+}
+
+img.avatar {
+    width: 40%;
+    border-radius: 50%;
+}
+
+.container {
+    padding: 95px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    width: 70%;
+}
+
+span.psw {
+    float: right;
+    padding-top: 16px;
+}
+
+div {
+    height: 50%;
+    width: 100%;
+
+}
+
+html {
+  min-height:100%;
+  background:linear-gradient(0deg,rgba(47,174,206,.6),rgba(47,174,206,.6)),url(https://wallpaperstudio10.com/static/wpdb/wallpapers/560x315/176340.jpg);
+  background-size:cover;
+  font-family:sans-serif;
+  font-family:monospace, monospace;
+  }
+/* Change styles for span and cancel button on extra small screens */
+/*@media screen and (max-width: 300px) {*/
+/*    span.psw {*/
+/*       display: block;*/
+/*       float: none;*/
+/*    }*/
+/*    .cancelbtn {*/
+/*       width: 100%;*/
+/*    }*/
+/*}*/
+</style>
+<body text="white">
+
+<h2 style="text-align:center">LOGIN TO ONECAMPUS</h2>
+
+<form action="/login" method="post">
+  <div class="imgcontainer" >
+    <img src="https://www.harvard.edu/sites/default/files/user13/harvard_shield_wreath.png" alt="Avatar" class="avatar">
+    </div>
+
+  <div class="imgcontainer">
+
+    <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>
+
+    <input class="form-control" name="password" placeholder="Password" type="password"/>
+
+    <button class="btn btn-primary" type="submit">Log In</button>
+    <button class="btn btn-primary" type="button" onclick="location.href='register';" value="Register" >Register</button>
+  </div>
+
+
+
+</form>
+
 </body>
 </html>
 
+<!--<form action="/login" method="post">-->
+<!--            <div class="form-group">-->
+<!--                <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <input class="form-control" name="password" placeholder="Password" type="password"/>-->
+<!--            </div>-->
+<!--            <button class="btn btn-primary" type="submit">Log In</button>-->
+<!--            <input type="button" onclick="location.href='register';" value="Register"/>-->
+<!--        </form>-->

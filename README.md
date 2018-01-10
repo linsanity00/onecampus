@@ -1,87 +1,42 @@
-# [Light Bootstrap Dashboard](http://www.creative-tim.com/product/light-bootstrap-dashboard)
-[![version][version-badge]][CHANGELOG] [![license][license-badge]][LICENSE]
+Run the project by typing "flask run" in a terminal window. This should give you a link to the website,
+which should be http://ide50-linzhu.cs50.io:8080. To see how the website looks for someone who has
+already joined clubs and is a club administrator, log in with the credentials "username: rlisk" and
+"password: rlisk." To start from scratch as a new user, click register and create a new account. Use
+your @college.harvard.edu email, or the website will reject your attempt at registration.
 
-![alt text](http://s3.amazonaws.com/creativetim_bucket/products/32/original/opt_lbd_thumbnail.jpg "Light Bootstrap Dashboard")
+Once you're logged in with a new account, you'll see the dashboard page, which is the homepage for
+OneCampus. Once you have joined clubs, this page will have links to the individual club pages and
+a list of events that you have RSVP'ed for, but for now, it's blank. The first step is to join clubs--
+Go to the "find clubs" link on the sidebar and select a category, then choose any club(s) and click
+"join club." You can join any club, but not all clubs have events. To make sure you add some clubs that
+have events so you can see how the Events feature works, we recommend joining Meditiation Club or
+Photography Club, for example.
 
-Light Bootstrap Dashboard is an admin dashboard template designed to be beautiful and simple. It is built on top of Bootstrap 3 and it is fully responsive. It comes with a big collections of elements that will offer you multiple possibilities to create the app that best fits your needs. It can be used to create admin panels, project management systems, web applications backend, CMS or CRM.
+Now that you've joined some clubs, you can return to the dashboard and see that it's no longer empty.
+Clicking the box with a club name will take you to the individual club page, where you can see a club
+description, general information, upcoming events, club members, and notes.
 
-The product represents a big suite of front-end developer tools that can help you jump start your project. We have created it thinking about things you actually need in a dashboard. Light Bootstrap Dashboard contains multiple handpicked and optimised plugins. Everything is designed to fit with one another. As you will be able to see, the dashboard you can access on Creative Tim is a customisation of this product.
+The "notifications" page on the sidebar will lead you to a page where you can see all of the notifications
+for all of your clubs in one location. The "upcoming events" page on the sidebar leads you to a page that
+has two tables; one for the events specific to your clubs and one for all events that have been marked as
+public that all members of the Harvard community are invited to. From this page, you can add an event to
+your Google calendar, and the event will be pre-populated with all of the information (location, description,
+event name, date, and time) for ease of use. You can also RSVP to each event, which will add the event to
+your dashboard so that you can easily see which events, public or private, you have said that you would
+attend.
 
-It comes with 6 filter colors for the sidebar (“black”, “azure”,”green”,”orange”,”red”,”purple”) and an option to have a background image.
+You can also go to the "create club" tab on the sidebar, which will take you to a form where you can input
+information about a new club. By creating the club, you automatically become an admin for it and have editing
+priviledges and the ability to make a new event for the club, which users are only to do if they create
+a club or become an admin for the club through the "become an admin" link. You can click through and experiment
+with the "become an admin," "edit club," and "create event" pages-- they are all self-explanatory. You will
+only be able to edit the clubs for which you are an admin.
 
-Special thanks go to:
-Robert McIntosh for the notification system
-Chartist for the wonderful charts
-We are very excited to share this dashboard with you and we look forward to hearing your feedback!
+Another feature of OneCampus is the profile feature. If you go to your club dashboard and click on a club,
+such as the Mountaineering Club, and scroll down to the bottom of the club page, you'll be able to see
+a list of users in that club. If you click on the user's name, you will be taken to their profile, where you
+can see their name, year, school, description, and a list of their clubs. You can also click on the Facebook
+and Twitter icons (if they have linked their social media to their profile) to get into contact with the user
+over social media. You can edit your own profile by clicking on the "manage profile" page on the sidebar.
 
-## Links:
-
-+ [Live Preview](http://demos.creative-tim.com/light-bootstrap-dashboard)
-+ [Video Tutorial](https://www.youtube.com/watch?v=c3M3NQtFyqM)
-+ [Light Bootstrap Dashboard PRO](http://www.creative-tim.com/product/light-bootstrap-dashboard-pro) (from $39)
-
-## Quick start
-
-Quick start options:
-
-- [Download from Github](https://github.com/creativetimofficial/light-bootstrap-dashboard.git).
-- [Download from Creative Tim](http://www.creative-tim.com/product/light-bootstrap-dashboard).
-- Clone the repo: `git clone https://github.com/creativetimofficial/light-bootstrap-dashboard.git`.
-
-
-### What's included
-
-Within the download you'll find the following directories and files:
-
-```
-x_lbd_free/
-├── assets/
-|   ├── css/
-|   ├── js/
-|   ├── fonts/
-|   └── img/
-├── dashboard.html
-├── CHANGELOG.md
-├── documentation
-├── icons.html
-├── maps.html
-├── notifications.html
-├── table.html
-├── template.html
-├── typography.html
-├── upgrade.html
-└── user.html
-
-```
-### License
-
-- Copyright 2017 Creative Tim (http://www.creative-tim.com)
-- Licensed under MIT (https://github.com/creativetimofficial/light-bootstrap-dashboard/blob/master/LICENSE.md)
-
-## Useful Links
-
-More products from Creative Tim: <http://www.creative-tim.com/products>
-
-Tutorials: <https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w>
-
-Freebies: <http://www.creative-tim.com/products>
-
-Affiliate Program (earn money): <http://www.creative-tim.com/affiliates/new>
-
-Social Media:
-
-Twitter: <https://twitter.com/CreativeTim>
-
-Facebook: <https://www.facebook.com/CreativeTim>
-
-Dribbble: <https://dribbble.com/creativetim>
-
-Google+: <https://plus.google.com/+CreativetimPage>
-
-Instagram: <https://instagram.com/creativetimofficial>
-
-
-[CHANGELOG]: ./CHANGELOG.md
-[LICENSE]: ./LICENSE.md
-[version-badge]: https://img.shields.io/badge/version-1.4.0-blue.svg
-[license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+Thanks and enjoy!

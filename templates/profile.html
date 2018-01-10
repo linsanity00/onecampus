@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block main %}
+<div class="content">
+    <div class="col-md-6">
+            <div class="card card-user">
+                <div class="image">
+                    <img src="http://ak3.picdn.net/shutterstock/videos/10833233/thumb/1.jpg" alt="..."/>
+                </div>
+                <div class="content">
+                    <h3 class="title text-center">{{userInfo["firstName"]}} {{userInfo["lastName"]}}<br />
+                        <small>username: {{userInfo["username"]}}</small>
+                    <p class="description text-center">
+                        <h5 class="title text-center">{{userInfo["aboutMe"]}}</h5>
+                    </p>
+                    <p class="description text-center">
+                        <h5 class="title text-center">{{userInfo["email"]}}</h5>
+                        <h5 class="title text-center">{{userInfo["school"]}} {{userInfo["year"]}}</h5>
+                    </p>
+                </div>
+                <div class="text-center">
+                    <a href="{{userInfo["facebook"]}}"> <class="btn btn-simple"><i class="fa fa-facebook-square"></i></a>
+                    <a href="{{userInfo["twitter"]}}" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
+                </div>
+            </div>
+    </div>
+
+        <div class="col-md-6">
+            <div class="card card-user">
+                <div class="image">
+                    <img src="http://ak3.picdn.net/shutterstock/videos/10833233/thumb/1.jpg" alt="..."/>
+                </div>
+                <div class="content">
+                    <h3 class="title text-center">{{userInfo["firstName"]}} {{userInfo["lastName"]}}'s Clubs<br />
+                    <p class="description text-center">
+                    {% for club in userClubs %}
+                        <div>
+                            <h5 class = "title text-center"><a href="http://ide50-linzhu.cs50.io:8080/club/{{club["id"]}}">{{club["clubName"]}}</a></h5>
+                        </div>
+                    {% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

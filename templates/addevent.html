@@ -6,15 +6,15 @@
 
 {% block main %}
 <div class="content">
-        <h2>Add a New Event</h2>
+    <h4>Add a New Event</h4>
 
- <form action="/addevent" method="post">
+    <form action="/addevent" method="post">
 
         <!--Create dropdown menu with of users' clubs-->
         <div>Choose a club to add an event for</div>
         <select input type="text" name="clubName" method="post">
           {% for name in clubNames %}
-            <option value= {{ name["clubName"] }}>{{ name["clubName"] }}</option>
+            <option value= "{{name["clubName"]}}">{{ name["clubName"] }}</option>
           {% endfor %}
         </select>
         <p></p>
@@ -46,19 +46,16 @@
 
         <!--Public or private-->
         <div>
-        <select input type="text" name="type" method="post">
-            <option value= public>Public event</option>
-            <option value= private>Private event</option>
-        </select>
+            <select input type="text" name="type" method="post">
+                <option value= public>Public event</option>
+                <option value= private>Private event</option>
+            </select>
         </div>
         <p></p>
 
         <!--Submit -->
-        <button class="btn btn-primary" type="submit">Add Event</button>
-
+        <button type="submit" class="btn btn-info btn-fill pull-left">Submit</button>
+        <div class="clearfix"></div>
     </form>
-    </div>
+</div>
 {% endblock %}
-
-
-

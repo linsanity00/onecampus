@@ -12,8 +12,13 @@ from helpers import apology, login_required
 # Configure application
 app = Flask(__name__)
 
-# db = SQL("sqlite:///database.db")
-db = SQL("postgres://lpgvjszmqqijjd:483762f3dcdd58ac65e424f6c3776b708fcd9b7c9eb9ecb56c2d2c293ddc52ef@ec2-184-73-206-155.compute-1.amazonaws.com:5432/ddo5j531r5v4n1")
+db = SQL("sqlite:///database.db")
+
+import datetime
+import re
+
+now = datetime.datetime.now()
+
 
 # Ensure responses aren't cached
 @app.after_request
@@ -22,6 +27,7 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -34,7 +40,7 @@ Session(app)
 @app.route("/dashboard")
 @login_required
 def dashboard():
-
+    currenttime = now.strftime("%Y-%m-%d")
     # query database to get a list of dictionaries of the user's clubs
     clubIDs = db.execute("SELECT clubID FROM userClubs WHERE userID = :id", id=session["user_id"])
 
@@ -44,13 +50,15 @@ def dashboard():
     # for each ID in clubIDs, get the club name
     for IDdict in clubIDs:
         clubID = IDdict["clubID"]
-        clubs.append(db.execute("SELECT clubName, id FROM clubs WHERE id = :clubID", clubID=clubID)[0])
+        clubs.append(db.execute(
+            "SELECT clubName, id FROM clubs WHERE id = :clubID", clubID=clubID)[0])
 
-    # create a list of private events and their information (all events for the user's clubs marked as private)
-    privateEvents = db.execute("SELECT eventName, date, time, location, clubName, description, type FROM event INNER JOIN users ON users.id=event.userID WHERE type = :type AND userID = :userID", userID=session["user_id"], type="private")
-
+    # list of events user is going to
+    userEvents = db.execute("SELECT * FROM events INNER JOIN userEvents ON events.eventID=userEvents.eventID WHERE userID = :userID AND date >= :currenttime ORDER BY date",
+                            userID=session["user_id"], currenttime=currenttime)
     # send HTML template the list of club names
-    return render_template("dashboard.html", clubs = clubs, privateEvents = privateEvents)
+    return render_template("dashboard.html", clubs=clubs, userEvents=userEvents)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def user():
@@ -82,7 +90,6 @@ def user():
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
 
-
         # Redirect user to home page
         return redirect("/")
 
@@ -90,20 +97,35 @@ def user():
     else:
         return render_template("login.html")
 
-@app.route("/club/<id>")
+
+@app.route("/club/<id>", methods=["GET", "POST"])
 def club(id):
+    currenttime = now.strftime("%Y-%m-%d")
+    if request.method == "GET":
+        # get all information about the club
+        clubInfo = db.execute("SELECT * FROM clubs WHERE id = :id", id=id)[0]
+        events = db.execute(
+            "SELECT * FROM clubs INNER JOIN events ON events.clubID = clubs.id WHERE id = :id AND date >= :currenttime ORDER BY date", id=id, currenttime=currenttime)
 
-    # get all information about the club
-    clubInfo = db.execute("SELECT * FROM clubs WHERE id = :id", id=id)
+        if not clubInfo:
+            return apology("Club does not exist", 400)
 
-    if not clubInfo:
-        return apology("Club does not exist", 400)
+        clubMembers = db.execute(
+            "SELECT firstName, lastName, id from users INNER JOIN userClubs ON userClubs.userID = users.id WHERE clubID = :id", id=id)
 
-    return render_template("club.html", clubInfo = clubInfo[0])
+        return render_template("club.html", clubInfo=clubInfo, events=events, clubMembers=clubMembers)
+
+    else:
+        # remove user from club
+        db.execute("DELETE FROM userClubs WHERE userID = :userID AND clubID = :clubID",
+                   clubID=id, userID=session["user_id"])
+        return redirect("/")
+
 
 @app.route("/user", methods=["GET", "POST"])
 def userProfile():
     if request.method == "POST":
+        # Get information from the form
         email = request.form.get("email")
         year = request.form.get("year")
         firstName = request.form.get("firstName")
@@ -112,22 +134,35 @@ def userProfile():
         facebook = request.form.get("facebook")
         twitter = request.form.get("twitter")
 
-        db.execute("UPDATE users SET email = :email, year = :year, firstName = :firstName, lastName = :lastName, aboutMe = :aboutMe, facebook = :facebook, twitter = :twitter WHERE id = :userID", userID=session["user_id"], email=email, year=year, firstName=firstName, lastName=lastName, aboutMe=aboutMe, facebook=facebook, twitter=twitter)
+        # Update the user's information based on what they submitted
+        db.execute("UPDATE users SET email = :email, year = :year, firstName = :firstName, lastName = :lastName, aboutMe = :aboutMe, facebook = :facebook, twitter = :twitter WHERE id = :userID",
+                   userID=session["user_id"], email=email, year=year, firstName=firstName, lastName=lastName, aboutMe=aboutMe, facebook=facebook, twitter=twitter)
 
         # get an updated list of information about the user
-        user = db.execute("SELECT * FROM users WHERE id=:userID", userID=session["user_id"])[0]
+        user = db.execute("SELECT * FROM users WHERE id=:userID",
+                          userID=session["user_id"])[0]
+
         return render_template("user.html", user=user)
 
     else:
         # get a list of information about the user
-        user = db.execute("SELECT * FROM users WHERE id=:userID", userID=session["user_id"])[0]
+        user = db.execute("SELECT * FROM users WHERE id=:userID",
+                          userID=session["user_id"])[0]
+
         return render_template("user.html", user=user)
 
 
 @app.route("/profile/<id>")
 def profile(id):
 
-    return render_template("club.html")
+    # get all information about the user
+    userInfo = db.execute("SELECT * FROM users WHERE id = :id", id=id)[0]
+
+    # get all the clubs that the user is in
+    userClubs = db.execute(
+        "SELECT clubName, id FROM clubs INNER JOIN userClubs ON clubs.id = userClubs.clubID WHERE userID = :id", id=id)
+
+    return render_template("profile.html", userInfo=userInfo, userClubs=userClubs)
 
 
 @app.route("/findclubs", methods=["GET", "POST"])
@@ -141,46 +176,77 @@ def findClubs():
         if not selection:
 
             clubName = request.form.get("club")
-            print(clubName)
-            # Determine the clubID from clubName " clubName +
-            clubID = db.execute("SELECT id FROM clubs WHERE clubName = :clubName", clubName=clubName)[0]["id"]
+
+            # Determine the clubID from clubName
+            clubID = db.execute("SELECT id FROM clubs WHERE clubName = :clubName",
+                                clubName=clubName)[0]["id"]
 
             # If user is already in club
             if db.execute("SELECT clubID FROM userClubs WHERE clubID=:clubID AND userID=:userID", clubID=clubID, userID=session["user_id"]):
-                return apology("You are already a member of "+clubName, 400)
+                return apology("You are already a member of " + clubName, 400)
             else:
 
                 # Add club to user's information in database
                 db.execute("INSERT INTO userClubs (userID, clubID) VALUES(:userID, :clubID)",
-                    userID=session["user_id"], clubID=clubID)
+                           userID=session["user_id"], clubID=clubID)
                 return redirect("/dashboard")
 
         # Category dropdown
         else:
             # make lists of clubs by type
-            academic = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Academic")
-            arts = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Arts")
-            athletic = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Athletic")
-            service = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Service")
-            media = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Media")
-            recreation = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Recreation")
-            cultural = db.execute("SELECT clubName, id FROM clubs WHERE category = :category", category = "Cultural")
+            academic = db.execute(
+                "SELECT clubName, id FROM clubs WHERE category = :category", category="Academic")
+            arts = db.execute(
+                "SELECT clubName, id FROM clubs WHERE category = :category", category="Arts")
+            service = db.execute(
+                "SELECT clubName, id FROM clubs WHERE category = :category", category="Service")
+            media = db.execute(
+                "SELECT clubName, id FROM clubs WHERE category = :category", category="Media")
+            recreation = db.execute(
+                "SELECT clubName, id FROM clubs WHERE category = :category", category="Recreation")
+            cultural = db.execute(
+                "SELECT clubName, id FROM clubs WHERE category = :category", category="Cultural")
 
-            return render_template("findclubs.html", selection=selection, academic=academic, arts=arts, athletic=athletic, service=service, media=media, recreation=recreation, cultural=cultural)
+            return render_template("findclubs.html", selection=selection, academic=academic, arts=arts, service=service, media=media, recreation=recreation, cultural=cultural)
 
     else:
         return render_template("findclubs.html")
 
+
 @app.route("/events", methods=["GET", "POST"])
 def events():
+    currenttime = now.strftime("%Y-%m-%d")
 
-    # create a list of private events and their information (all events for the user's clubs marked as private)
-    privateEvents = db.execute("SELECT eventName, date, time, location, clubName, description, type FROM event INNER JOIN users ON users.id=event.userID WHERE type = :type AND userID = :userID", userID=session["user_id"], type="private")
+    # RSVPed
+    if request.method == "POST":
+        # add to userEvents
+        eventID = request.form.get("eventID")
+        db.execute("INSERT INTO userEvents (eventID, userID) VALUES (:eventID, :userID)",
+                   eventID=eventID, userID=session["user_id"])
+        return redirect("/dashboard")
 
-    # create a list of public events (all events marked as public)
-    publicEvents = db.execute("SELECT eventName, date, time, location, clubName, description, type FROM event WHERE type = :type", type="public")
+    else:
+        # query database to get a list of dictionaries of the user's clubs
+        clubIDs = db.execute("SELECT clubID FROM userClubs WHERE userID = :id",
+                             id=session["user_id"])
 
-    return render_template("events.html", privateEvents=privateEvents, publicEvents=publicEvents)
+        # list of userevents
+        userEvents = []
+        # create events of user's clubs
+        for IDdict in clubIDs:
+            clubID = IDdict["clubID"]
+            events = db.execute(
+                "SELECT * FROM events WHERE clubID = :clubID AND date >= :currenttime ORDER BY date", clubID=clubID, currenttime=currenttime)
+            for event in events:
+                userEvents.append(events[0])
+        userEvents = sorted(userEvents, key=lambda k: k['date'])
+
+        # create list of all public events not in user's clubs
+        publicEvents = db.execute(
+            "SELECT * FROM events WHERE type = :type AND date >= :currenttime ORDER BY date", type="public", currenttime=currenttime)
+
+        return render_template("events.html", userEvents=userEvents, publicEvents=publicEvents)
+
 
 @app.route("/createclub", methods=["GET", "POST"])
 def createclub():
@@ -195,33 +261,27 @@ def createclub():
         if not clubName or not description or not meetingTimes or not location or not contact:
             return apology("Missing input", 400)
 
-        # Check to make sure the club does not already exist
-        # clubID = db.execute("SELECT clubName FROM clubs WHERE clubName = :clubName", clubName=clubName)
-        # if clubName:
-            # return apology("Club already exists", 400)
-
         # Insert club into database
-        db.execute("INSERT INTO clubs (clubName, description, meetingTimes, location, contact, category) VALUES(:clubName, :description, :meetingTimes, :location, :contact, :category)", clubName=clubName, description=description, meetingTimes=meetingTimes, location=location, contact=contact, category=category)
-
+        db.execute("INSERT INTO clubs (clubName, description, meetingTimes, location, contact, category) VALUES(:clubName, :description, :meetingTimes, :location, :contact, :category)",
+                   clubName=clubName, description=description, meetingTimes=meetingTimes, location=location, contact=contact, category=category)
 
         # Determine the clubID from clubName
-        clubID = db.execute("SELECT id FROM clubs WHERE clubName = :clubName", clubName=clubName)[0]["id"]
-
-
-        db.execute("INSERT INTO category (category, clubID) VALUES(:category, :clubID)", category=category, clubID=clubID)
+        clubID = db.execute("SELECT id FROM clubs WHERE clubName = :clubName",
+                            clubName=clubName)[0]["id"]
 
         # Add club to user's information in database
         db.execute("INSERT INTO userClubs (userID, clubID) VALUES(:userID, :clubID)",
-            userID=session["user_id"], clubID=clubID)
+                   userID=session["user_id"], clubID=clubID)
 
         # Make user an admin
         db.execute("INSERT INTO admins (userID, clubID) VALUES(:userID, :clubID)",
-            userID=session["user_id"], clubID=clubID)
+                   userID=session["user_id"], clubID=clubID)
 
         return redirect("/")
 
     else:
         return render_template("createclub.html")
+
 
 @app.route("/editclub", methods=["GET", "POST"])
 def editclub():
@@ -235,11 +295,8 @@ def editclub():
         notes = request.form.get("notes")
         contact = request.form.get("contact")
 
-        # if not clubName or not description or not location or not meetingTimes or not nextMeeting or not notification or not notes:
-        #     return apology("Missing input", 400)
-
         db.execute("UPDATE clubs SET description = :description, location = :location, meetingTimes = :meetingTimes, nextMeeting = :nextMeeting, notification = :notification, notes = :notes WHERE clubName = :clubName", clubName=clubName, description=description, location=location, meetingTimes=meetingTimes, nextMeeting=nextMeeting,
-                notification=notification, notes=notes)
+                   notification=notification, notes=notes)
 
         return redirect("/club")
 
@@ -249,15 +306,15 @@ def editclub():
         clubNames = []
 
         # Query portfolio for user's clubs
-        names = db.execute("SELECT clubName FROM clubs INNER JOIN admins ON admins.clubID=clubs.id WHERE userID=:userID", userID=session["user_id"])
-        print(names)
+        names = db.execute(
+            "SELECT clubName FROM clubs INNER JOIN admins ON admins.clubID=clubs.id WHERE userID=:userID", userID=session["user_id"])
 
         # Append to list of all stocks (for dropdown menu)
         for name in names:
             clubNames.append(name)
 
-
     return render_template("editclub.html", clubNames=clubNames)
+
 
 @app.route("/addevent", methods=["GET", "POST"])
 def addevent():
@@ -270,18 +327,24 @@ def addevent():
         description = request.form.get("description")
         type = request.form.get("type")
 
-        db.execute("INSERT INTO event (userID, clubName, eventName, date, time, location, description, type) VALUES(:userID, :clubName, :eventName, :date, :time, :location, :description, :type)", userID=session["user_id"], clubName=clubName, eventName=eventName, date=date, time=time, location=location, description=description, type=type)
+        # get clubID
+        clubID = db.execute("SELECT id FROM clubs WHERE clubName=:clubName",
+                            clubName=clubName)[0]["id"]
+
+        # insert the event into the events table in the database
+        db.execute(
+            "INSERT INTO events (clubID, eventName, date, time, location, description, type) VALUES(:clubID, :eventName, :date, :time, :location, :description, :type)", clubID=clubID, eventName=eventName, date=date, time=time, location=location, description=description, type=type)
 
         return redirect("/")
 
     else:
-        # dropdown menu output
+        # Dropdown menu output
         # Array that stores user's clubs they administrate
         clubNames = []
 
         # Query portfolio for user's clubs
-        names = db.execute("SELECT clubName FROM clubs INNER JOIN admins ON admins.clubID=clubs.id WHERE userID=:userID", userID=session["user_id"])
-        # print(names)
+        names = db.execute(
+            "SELECT clubName FROM clubs INNER JOIN admins ON admins.clubID=clubs.id WHERE userID=:userID", userID=session["user_id"])
 
         # Append to list of all stocks (for dropdown menu)
         for name in names:
@@ -294,17 +357,21 @@ def addevent():
 def aboutus():
     return render_template("aboutus.html")
 
+
 @app.route("/notifications")
 def notifications():
 
     # get a list of all notifications for the user's clubs
-    notifications = db.execute("SELECT notification, clubName FROM clubs INNER JOIN userClubs ON userClubs.clubID=clubs.id WHERE userID=:userID", userID=session["user_id"])
+    notifications = db.execute(
+        "SELECT notification, clubName FROM clubs INNER JOIN userClubs ON userClubs.clubID=clubs.id WHERE userID=:userID", userID=session["user_id"])
 
+    # append each notification to a list of notifications called notificationsList
     notificationsList = []
     for notification in notifications:
         notificationsList.append(notification)
 
-    return render_template("notifications.html", notificationsList = notificationsList)
+    return render_template("notifications.html", notificationsList=notificationsList)
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -324,16 +391,27 @@ def register():
         if not username:
             return apology("Must provide username", 400)
 
+        # Ensure username not taken
+        elif db.execute("SELECT * FROM users WHERE username = :username", username=username):
+            return apology("Username already taken", 400)
+
         # Ensure password was submitted
         elif not password:
             return apology("Must provide password", 400)
 
-        # Ensure confirmation password was submitted
+        elif not validate(password) == "True":
+            return apology(validate(password))
+
+        # Ensure confirmation password was submitted and matches
         elif not password_confirmation:
             return apology("Must provide confirmation password", 400)
 
         elif not password == password_confirmation:
             return apology("Passwords must match", 400)
+
+        # Ensure the email is a harvard email account
+        elif "harvard" not in email:
+            return apology("Please enter Harvard email", 400)
 
         # Insert user into database
         rows = db.execute("INSERT INTO users (username, hash, email, school, year) VALUES(:username, :hash, :email, :school, :year)",
@@ -353,22 +431,26 @@ def register():
     else:
         return render_template("register.html")
 
+
 @app.route("/becomeadmin", methods=["GET", "POST"])
 def becomeadmin():
     if request.method == "POST":
         clubName = request.form.get("clubName")
 
+        # Ensure the user submitted a club name
         if not clubName:
             return apology("Missing Input", 400)
 
-        clubID = db.execute("SELECT id FROM clubs WHERE clubName=:clubName", clubName=clubName)[0]["id"]
+        clubID = db.execute("SELECT id FROM clubs WHERE clubName=:clubName",
+                            clubName=clubName)[0]["id"]
 
-        db.execute("INSERT INTO admins (userID, clubID) VALUES(:userID, :clubID)", userID=session["user_id"], clubID=clubID)
+        db.execute("INSERT INTO admins (userID, clubID) VALUES(:userID, :clubID)",
+                   userID=session["user_id"], clubID=clubID)
 
         return redirect("/")
 
     else:
-        # dropdown menu output
+        # Dropdown menu output
         # Array that stores clubnames
         clubNames = []
 
@@ -381,3 +463,15 @@ def becomeadmin():
 
     return render_template("becomeadmin.html", clubNames=clubNames)
 
+
+def validate(password):
+    if len(password) < 8:
+        return "Make sure your password is at least 8 characters"
+    elif re.search('[0-9]', password) is None:
+        return "Make sure your password has a number"
+    elif re.search('[A-Z]', password) is None:
+        return "Make sure your password has a capital letter"
+    elif re.search(r"[ !@#$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None:
+        return "Make sure your password has a symbol"
+    else:
+        return "True"

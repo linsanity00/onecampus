@@ -5,13 +5,10 @@
 {% endblock %}
 
 {% block main %}
-        <div class="content">
-
-            <h3 align="center">{{clubInfo["clubName"]}}</h3>
-
-            <div class="container-fluid">
+   <div class="content">
+       <div class="container-fluid">
                 <div class="row">
-
+                    <h3 align="center">{{clubInfo["clubName"]}}</h3>
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">
@@ -24,78 +21,85 @@
                     </div>
                 </div>
 
-                    <div class="col-md-6">
-                        <div class="card">
-
-                            <div class="header">
-                                <h4 class="title">Regular Meeting Times</h4>
-                            </div>
-                            <div class="content">
-                                {{clubInfo["meetingTimes"]}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="header">
-                                <h4 class="title">Notifications</h4>
-                                <p class="category">Announcements & tasks</p>
-                            </div>
-                            <div class="content">
-                                {{clubInfo["notification"]}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                        <div class="card ">
-                            <div class="header">
-                                <h4 class="title">Next Meeting</h4>
-                            </div>
-                            <div class="content">
-                                {{clubInfo["nextMeeting"]}}
-                            </div>
-                        </div>
-                    </div>
-
+            <!--<div class="container-fluid">-->
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="card ">
+                    <div class="col-md-12">
+                        <div class="card">
                             <div class="header">
-                                <h4 class="title">Location</h4>
+                                <h4 class="title">General Information</h4>
                             </div>
-                            <div class="content">
-                                {{clubInfo["location"]}}
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>Regular Meetings</th>
+                                        <th>Next Meeting</th>
+                                    	<th>Notifications</th>
+                                    	<th>Location</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        	<td>{{clubInfo["meetingTimes"]}}</td>
+                                        	<td>{{clubInfo["nextMeeting"]}}</td>
+                                        	<td>{{clubInfo["notification"]}}</td>
+                                        	<td>{{clubInfo["location"]}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="card ">
                             <div class="header">
                                 <h4 class="title">Upcoming Events</h4>
                             </div>
+                            <div class="content table-responsive table-full-width">
+                                    <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    	<th>Event Name</th>
+                                    	<th>Location</th>
+                                    	<th>Description</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for event in events %}
+                                        <tr>
+                                        	<td>{{event["date"]}}</td>
+                                        	<td>{{event["time"]}}</td>
+                                        	<td>{{event["eventName"]}}</td>
+                                        	<td>{{event["location"]}}</td>
+                                        	<td>{{event["description"]}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+                    <div class="col-md-6">
+                        <div class="card ">
+                            <div class="header">
+                                <h4 class="title">Club Members</h4>
+                            </div>
                             <div class="content">
-                                {{clubInfo["upcomingEvent"]}}
+                                {% for member in clubMembers %}
+                                    {% if member["firstName"] %}
+                                        <div><a href="http://ide50-linzhu.cs50.io:8080/profile/{{member["id"]}}">{{member["firstName"]}} {{member["lastName"]}}</a></div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <div class="card ">
-                            <div class="header">
-                                <h4 class="title">Contact Information</h4>
-                            </div>
-                            <div class="content">
-                                {{clubInfo["contact"]}}
-                            </div>
-                        </div>
-                    </div>
-
-                <div class="row">
-                    <div class="col-md-12">
                         <div class="card">
 
                             <div class="header">
@@ -108,4 +112,8 @@
                     </div>
                 </div>
 
+                <!--leave club--><form method="post">
+                <button type="submit" class="btn btn-info btn-fill pull-center" name="leaveclub">Leave Club</button>
+                <p></p><p></p>
+            </form>
 {% endblock %}

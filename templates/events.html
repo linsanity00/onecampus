@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+<form action="/events" method="post">
     <div class="content">
         <div class="container-fluid">
         <div class="row">
@@ -12,8 +13,8 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Private Events</h4>
-                                <p class="category">Events for members of your clubs</p>
+                                <h4 class="title">Events for my clubs</h4>
+                                <p class="category">Events hosted by my clubs</p>
                             </div>
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-hover table-striped">
@@ -24,9 +25,10 @@
                                     	<th>Location</th>
                                     	<th>Description</th>
                                     	<th>Add to Calendar</th>
+                                    	<th>Add to Dashboard</th>
                                     </thead>
                                     <tbody>
-                                        {% for event in privateEvents %}
+                                        {% for event in userEvents %}
                                         <tr>
                                         	<td>{{event["date"]}}</td>
                                         	<td>{{event["time"]}}</td>
@@ -44,6 +46,13 @@
                                                 <span class="description">{{event["description"]}}</span>
                                                 <span class="location">{{event["location"]}}</span>
                                             </div>
+                                        	</td>
+                                        	<td>
+                                        	    <p>
+
+                                                    <!--RSVP-->
+                                                    <button type="submit" class="btn btn-info btn-fill pull-left" name="eventID" value="{{event["eventID"]}}">RSVP</button>
+                                                </p>
                                         	</td>
                                         </tr>
                                         {% endfor %}
@@ -69,6 +78,7 @@
                                     	<th>Location</th>
                                     	<th>Description</th>
                                     	<th>Add to Calendar</th>
+                                    	<th>Add to Dashboard</th>
                                     </thead>
                                     <tbody>
                                         {% for event in publicEvents %}
@@ -90,6 +100,12 @@
                                                 <span class="location">{{event["location"]}}</span>
                                             </div>
                                         	</td>
+                                        	<td>
+                                        	    <p>
+                                                    <!--RSVP-->
+                                                    <button type="submit" class="btn btn-info btn-fill pull-left" name="eventID" value="{{event["eventID"]}}">RSVP</button>
+                                                </p>
+                                        	</td>
                                      </tr>
 
                                         {% endfor %}
@@ -101,6 +117,6 @@
                 </div>
             </div>
         </div>
-
+</form>
 
 {% endblock %}

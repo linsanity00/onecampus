@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block main %}
-<form action="/becomeadmin" method="post">
-        <label>
+    <div class="content">
+      <h4>Become an Admin</h4>
+        <form action="/becomeadmin" method="post">
 
         <div>Choose a club to become an admin of</div>
 
@@ -17,14 +18,14 @@
           {% endfor %}
         </select>
 
-      </label>
+        <p></p>
+        <p></p>
 
+        <!--Become Admin-->
         <p>
-            <!--Submit -->
-        <button class="btn btn-primary" type="submit">Become Admin</button>
+          <button type="submit" class="btn btn-info btn-fill pull-left">Become an Admin</button>
+          <div class="clearfix"></div>
         </p>
-
-
-    </form>
-    </div>
+      </form>
+  </div>
 {% endblock %}
